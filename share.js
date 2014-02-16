@@ -25,15 +25,6 @@
 
             $element.addClass("js-share");
 
-            if (options.popup) {
-
-                $element.attr({
-                    rel: "external",
-                    target: "_blank"
-                });
-
-            }
-
             switch (options.network) {
 
                 case 'facebook':
@@ -50,11 +41,6 @@
                     $.getJSON("http://graph.facebook.com/" + options.url, function(data) {
                         if (data.shares > settings.threshold)
                             $count.text(abbreviate(data.shares)).removeClass('js-share-count-loading').appendTo($element);
-                    });
-
-                    $element.click(function(event) {
-                        open($(this).attr("href"));
-                        return false;
                     });
 
                     break;
@@ -77,15 +63,24 @@
                             $count.text(abbreviate(data.count)).removeClass('js-share-count-loading').appendTo($element);
                     });
 
-                    $element.click(function(event) {
-                        open($(this).attr("href"));
-                        return false;
-                    });
-
                     break;
 
+            }
+
+            if (options.popup) {
+
+                $element.attr({
+                    rel: "external",
+                    target: "_blank"
+                });
+
+                $element.click(function(event) {
+                    open($(this).attr("href"));
+                    return false;
+                });
 
             }
+
 
         };
 
@@ -119,7 +114,7 @@
 
         var parameters = function(obj) {
             return Object.keys(obj).map(function(key) {
-                if(!obj[key]) return "";
+                if (!obj[key]) return "";
                 return encodeURIComponent(key) + '=' + encodeURIComponent(obj[key]);
             }).join('&');
         }
