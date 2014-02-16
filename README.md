@@ -31,13 +31,16 @@ The data attributes currently supported by the plugin are:
 :	The social network you want to share on, currently supports `facebook` and `twitter`
 
 `data-url`
-:	The url to be shared, used to retrieve share count
+:	The url to be shared, used to retrieve share count, defaults to page url
 
 `data-message`
 :	The default text of the shared message, only supported by `twitter`
 
 `data-via`
 :	The twitter username to include with the shared message, only supported by `twitter`
+
+`data-popup`
+:	The sharing screen shows in a popup window rather than redirecting, defaults to `true`
 
 ### Options
 This plugin supports the following options:
