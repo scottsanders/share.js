@@ -1,10 +1,13 @@
-(function ($) {
+(function($) {
 
     "use strict";
- 
-    $.fn.share = function (options) {
- 
-        var defaults = {}
+
+    $.fn.share = function(options) {
+
+        var defaults = {
+            threshold: 0,
+            abbreviate: true,
+        }
 
         var $this = this,
             settings = $.extend(defaults, options);
@@ -18,61 +21,116 @@
                 popup: (typeof $element.data('popup') !== 'undefined') ? $element.data('popup') : true,
                 network: (typeof $element.data('share') !== 'undefined') ? $element.data('share') : "facebook",
             },
-                $count = $('<span class="js-share-count"/>');                        
+                $count = $('<span class="js-share-count"/>');
 
             $element.addClass("js-share");
 
-            if (options.popup){
-               
+            if (options.popup) {
+
                 $element.attr({
-                    rel:"external",
-                    target:"_blank"
+                    rel: "external",
+                    target: "_blank"
                 });
 
             }
 
-            switch(options.network){
+            switch (options.network) {
 
                 case 'facebook':
-                    
-                    var url = 'http://www.facebook.com/sharer/sharer.php?';
-                    if (options.url) url += 'u='+encodeURIComponent(options.url);
+
+                    var params = {
+                        u: options.url
+                    }
+                    var url = 'http://www.facebook.com/sharer/sharer.php?' + parameters(params);
 
                     $element
                         .addClass("js-share-facebook")
-                        .attr("href",url);
+                        .attr("href", url);
 
-                    $count.appendTo($element).addClass("js-share-count-loading").load("facebook.json",function(data){
-                        $(this).text(data).removeClass('js-share-count-loading');
+                    $.getJSON("http://graph.facebook.com/" + options.url, function(data) {
+                        if (data.shares > settings.threshold)
+                            $count.text(abbreviate(data.shares)).removeClass('js-share-count-loading').appendTo($element);
                     });
+
+                    $element.click(function(event) {
+                        open($(this).attr("href"));
+                        return false;
+                    });
+
                     break;
 
                 case 'twitter':
-                    
-                    var url = 'https://twitter.com/intent/tweet?';
-                    if (options.via) url += 'via='+encodeURIComponent(options.via);
-                    if (options.message) url += 'text='+encodeURIComponent(options.message); //TODO: check if amperstand
+
+                    var params = {
+                        via: options.via ? options.via : "",
+                        text: options.message ? options.message : "",
+                        url: options.url
+                    }
+                    var url = 'https://twitter.com/intent/tweet?' + parameters(params);
 
                     $element
                         .addClass("js-share-twitter")
-                        .attr("href",url);
+                        .attr("href", url);
 
-                    $count.appendTo($element).addClass("js-share-count-loading").load("twitter.json",function(data){
-                        $(this).text(data).removeClass('js-share-count-loading');
+                    $.getJSON("http://urls.api.twitter.com/1/urls/count.json?url=" + options.url + "&callback=?", function(data) {
+                        if (data.count > settings.threshold)
+                            $count.text(abbreviate(data.count)).removeClass('js-share-count-loading').appendTo($element);
                     });
+
+                    $element.click(function(event) {
+                        open($(this).attr("href"));
+                        return false;
+                    });
+
                     break;
 
 
             }
 
         };
- 
-        return this.each( function() {
-            
+
+        var abbreviate = function(number) {
+
+            if (!settings.abbreviate) return number;
+
+            number = number.toString();
+
+            if (number.length > 6)
+                return number.substr(0, 1) + "." + number.substr(1, 1) + "m";
+            else if (number.length > 5)
+                return number.substr(0, 3) + "k";
+            else if (number.length > 5)
+                return number.substr(0, 3) + "k";
+            else if (number.length > 4)
+                return number.substr(0, 2) + "k";
+            else if (number.length > 3)
+                return number.substr(0, 1) + "." + number.substr(1, 1) + "k";
+            else
+                return number;
+        }
+
+        var open = function(url, w, h) {
+            var w = typeof w !== 'undefined' ? w : 600,
+                h = typeof h !== 'undefined' ? h : 300,
+                left = (screen.width / 2) - (w / 2),
+                top = (screen.height / 2) - (h / 2);
+            window.open(url, "MsgWindow", 'toolbar=no, location=no, directories=no, status=no, menubar=no, scrollbars=no, resizable=no, copyhistory=no, width=' + w + ', height=' + h + ', top=' + top + ', left=' + left)
+        }
+
+        var parameters = function(obj) {
+            return Object.keys(obj).map(function(key) {
+                if(!obj[key]) return "";
+                return encodeURIComponent(key) + '=' + encodeURIComponent(obj[key]);
+            }).join('&');
+        }
+
+
+        return this.each(function() {
+
             init($(this));
 
         });
- 
+
     };
- 
+
 }(jQuery));
