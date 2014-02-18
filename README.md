@@ -48,6 +48,7 @@ This plugin supports the following options:
 jQuery('a').share({
   threshold: 0,
   abbreviate: true,
+  counts: true
 });
 ```
 
