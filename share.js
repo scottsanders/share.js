@@ -20,9 +20,12 @@
                 message: (typeof $element.data('message') !== 'undefined') ? $element.data('message') : false,
                 via: (typeof $element.data('via') !== 'undefined') ? $element.data('via') : false,
                 popup: (typeof $element.data('popup') !== 'undefined') ? $element.data('popup') : true,
+                count: (typeof $element.data('count') !== 'undefined') ? $element.data('count') : settings.counts,
                 network: (typeof $element.data('share') !== 'undefined') ? $element.data('share') : "facebook",
-            },
-                $count = $('<span class="js-share-count"/>');
+            }
+
+            if(options.count)
+                var $count = $('<span class="js-share-count"/>');
 
             $element.addClass("js-share");
 
@@ -39,7 +42,7 @@
                         .addClass("js-share-facebook")
                         .attr("href", url);
 
-                    if (settings.counts) {
+                    if (options.count) {
                         $.getJSON("http://graph.facebook.com/" + options.url, function(data) {
                             if (data.shares > settings.threshold)
                                 $count.text(abbreviate(data.shares)).removeClass('js-share-count-loading').appendTo($element);
@@ -61,7 +64,7 @@
                         .addClass("js-share-twitter")
                         .attr("href", url);
 
-                    if (settings.counts) {
+                    if (options.count) {
                         $.getJSON("http://urls.api.twitter.com/1/urls/count.json?url=" + options.url + "&callback=?", function(data) {
                             if (data.count > settings.threshold)
                                 $count.text(abbreviate(data.count)).removeClass('js-share-count-loading').appendTo($element);

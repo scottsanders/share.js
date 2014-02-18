@@ -42,6 +42,9 @@ The data attributes currently supported by the plugin are:
 `data-popup`
 :	The sharing screen shows in a popup window rather than redirecting, defaults to `true`
 
+`data-count`
+:	Determines whether or not to show the share count on this specific share link, defaults to `true`
+
 ### Options
 This plugin supports the following options:
 ```javascript
@@ -57,6 +60,9 @@ jQuery('a').share({
 
 `abbreviate`
 :	Abbreviates large numbers when sharing is high, so *15101* shares become *15k*.
+
+`counts`
+:	Determines whether to show share counts, can be overwridden per share link with `data-count`
 
 
 ## Authors
