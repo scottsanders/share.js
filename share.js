@@ -7,6 +7,7 @@
         var defaults = {
             threshold: 0,
             abbreviate: true,
+            counts: true
         }
 
         var $this = this,
@@ -38,10 +39,12 @@
                         .addClass("js-share-facebook")
                         .attr("href", url);
 
-                    $.getJSON("http://graph.facebook.com/" + options.url, function(data) {
-                        if (data.shares > settings.threshold)
-                            $count.text(abbreviate(data.shares)).removeClass('js-share-count-loading').appendTo($element);
-                    });
+                    if (settings.counts) {
+                        $.getJSON("http://graph.facebook.com/" + options.url, function(data) {
+                            if (data.shares > settings.threshold)
+                                $count.text(abbreviate(data.shares)).removeClass('js-share-count-loading').appendTo($element);
+                        });
+                    }
 
                     break;
 
@@ -58,10 +61,12 @@
                         .addClass("js-share-twitter")
                         .attr("href", url);
 
-                    $.getJSON("http://urls.api.twitter.com/1/urls/count.json?url=" + options.url + "&callback=?", function(data) {
-                        if (data.count > settings.threshold)
-                            $count.text(abbreviate(data.count)).removeClass('js-share-count-loading').appendTo($element);
-                    });
+                    if (settings.counts) {
+                        $.getJSON("http://urls.api.twitter.com/1/urls/count.json?url=" + options.url + "&callback=?", function(data) {
+                            if (data.count > settings.threshold)
+                                $count.text(abbreviate(data.count)).removeClass('js-share-count-loading').appendTo($element);
+                        });
+                    }
 
                     break;
 
