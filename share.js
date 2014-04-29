@@ -121,12 +121,22 @@
         }
 
         var parameters = function(obj) {
-            return Object.keys(obj).map(function(key) {
+        	if (!Object.keys) {
+			 	Object.keys = function(obj) {
+			    	var keys = [];
+				    for (var i in obj) {
+				      	if (obj.hasOwnProperty(i)) {
+				        	keys.push(i);
+				      	}
+				    }
+					return keys;
+				};
+			}
+            return $.map(Object.keys(obj), function(key) {
                 if (!obj[key]) return "";
                 return encodeURIComponent(key) + '=' + encodeURIComponent(obj[key]);
             }).join('&');
         }
-
 
         return this.each(function() {
 
