@@ -107,6 +107,8 @@
 
                     var url = 'javascript:window.print()'
 
+                    options.popup = false;
+
                     $element
                         .addClass("js-share-print")
                         .attr("href", url);
