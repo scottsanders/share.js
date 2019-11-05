@@ -23,18 +23,18 @@ Any link on a site can become sharable through the use of the following data tag
 ```
 Then in your jQuery call the plugin as follows:
 ```javascript
-jQuery('a').share();
+jQuery('a[data-share]').share();
 ```
 The data attributes currently supported by the plugin are:
 
 `data-share`
-:	The social network you want to share on, currently supports `facebook` and `twitter`
+:	The social network you want to share on, currently supports `facebook`, `twitter`, `whatsapp`, `email` and `print`
 
 `data-url`
 :	The url to be shared, used to retrieve share count, defaults to page url
 
 `data-message`
-:	The default text of the shared message, only supported by `twitter`
+:	The default text of the shared message, supported by `twitter`, `whatsapp`, and `email`
 
 `data-via`
 :	The twitter username to include with the shared message, only supported by `twitter`

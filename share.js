@@ -36,14 +36,14 @@
                     var params = {
                         u: options.url
                     }
-                    var url = 'http://www.facebook.com/sharer/sharer.php?' + parameters(params);
+                    var url = 'https://www.facebook.com/sharer/sharer.php?' + parameters(params);
 
                     $element
                         .addClass("js-share-facebook")
                         .attr("href", url);
 
                     if (options.count) {
-                        $.getJSON("http://graph.facebook.com/" + options.url, function(data) {
+                        $.getJSON("https://graph.facebook.com/" + options.url, function(data) {
                             if (data.shares > settings.threshold)
                                 $count.text(abbreviate(data.shares)).removeClass('js-share-count-loading').appendTo($element);
                         });
@@ -73,6 +73,46 @@
 
                     break;
 
+                case 'whatsapp':
+
+                    var params = {
+                        via: options.via ? options.via : "",
+                        text: options.message ? options.message & " " & options.url : options.url,
+                        url: options.url
+                    }
+
+                    var url = 'https://api.whatsapp.com/send?' + parameters(params);
+
+                    $element
+                        .addClass("js-share-whatsapp")
+                        .attr("href", url);
+
+                    break;
+
+                case 'email':
+
+                    var params = {
+                        body: options.message ? options.message & " " & options.url : options.url,
+                    }
+
+                    var url = 'mailto:?' + parameters(params);
+
+                    $element
+                        .addClass("js-share-email")
+                        .attr("href", url);
+
+                    break;
+
+                case 'print':
+
+                    var url = 'javascript:window.print()'
+
+                    $element
+                        .addClass("js-share-print")
+                        .attr("href", url);
+
+                    break;
+
             }
 
             if (options.popup) {
@@ -82,9 +122,9 @@
                     target: "_blank"
                 });
 
-                $element.click(function(event) {
+                $element.click(function(e) {
+                    e.preventDefault();
                     open($(this).attr("href"));
-                    return false;
                 });
 
             }
@@ -121,17 +161,17 @@
         }
 
         var parameters = function(obj) {
-        	if (!Object.keys) {
-			 	Object.keys = function(obj) {
-			    	var keys = [];
-				    for (var i in obj) {
-				      	if (obj.hasOwnProperty(i)) {
-				        	keys.push(i);
-				      	}
-				    }
-					return keys;
-				};
-			}
+            if (!Object.keys) {
+                Object.keys = function(obj) {
+                    var keys = [];
+                    for (var i in obj) {
+                        if (obj.hasOwnProperty(i)) {
+                            keys.push(i);
+                        }
+                    }
+                    return keys;
+                };
+            }
             return $.map(Object.keys(obj), function(key) {
                 if (!obj[key]) return "";
                 return encodeURIComponent(key) + '=' + encodeURIComponent(obj[key]);
