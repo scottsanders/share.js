@@ -77,7 +77,7 @@
 
                     var params = {
                         via: options.via ? options.via : "",
-                        text: options.message ? options.message & " " & options.url : options.url,
+                        text: options.message ? options.message + " " + options.url : options.url,
                         url: options.url
                     }
 
@@ -92,7 +92,7 @@
                 case 'email':
 
                     var params = {
-                        body: options.message ? options.message & " " & options.url : options.url,
+                        body: options.message ? options.message + " " + options.url : options.url,
                     }
 
                     var url = 'mailto:?' + parameters(params);
